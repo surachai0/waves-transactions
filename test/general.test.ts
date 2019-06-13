@@ -1,10 +1,12 @@
-import { publicKey, verifySignature } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { reissue, signTx, data, burn, broadcast } from '../src'
 import { serialize, verify } from '../src/general'
 import { reissueMinimalParams, burnMinimalParams, orderMinimalParams } from './minimalParams'
 import { TTx } from '../src'
 import { exampleTxs } from './exampleTxs'
 import { order } from '../src/requests/order'
+
+const { publicKey, verifySignature } = crypto();
 
 const stringSeed = 'df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8'
 

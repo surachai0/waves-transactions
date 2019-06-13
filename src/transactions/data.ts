@@ -10,7 +10,7 @@ const {
   SHORT,
   STRING,
 } = serializePrimitives
-import { concat, hashBytes, signBytes } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import {
   IDataTransaction,
   TRANSACTION_TYPE,
@@ -20,6 +20,11 @@ import {
   WithId,
   WithSender
 } from '../transactions'
+
+const { signBytes, blake2b } = crypto()
+const { concat } = crypto({output: 'Bytes'})
+
+
 import { addProof, convertToPairs, fee, getSenderPublicKey } from '../generic'
 import { TSeedTypes } from '../types'
 import { binary } from '@waves/marshall'
@@ -89,8 +94,8 @@ export function data(paramsOrTx: any, seed?: TSeedTypes): IDataTransaction & Wit
   }
   const bytes1 = binary.serializeTx(tx)
 
-  seedsAndIndexes.forEach(([s,i]) => addProof(tx, signBytes(bytes1, s),i))
-  tx.id = hashBytes(bytes1)
+  seedsAndIndexes.forEach(([s,i]) => addProof(tx, signBytes(s, bytes1),i))
+  tx.id = blake2b(bytes1)
 
   return tx
 } 

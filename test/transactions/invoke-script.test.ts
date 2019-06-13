@@ -1,8 +1,10 @@
-import { publicKey, verifySignature } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { invokeScriptMinimalParams } from '../minimalParams'
 import { invokeScript } from '../../src/transactions/invoke-script'
 import { binary } from '@waves/marshall'
 import { IInvokeScriptParams } from '../../src'
+
+const { publicKey, verifySignature } = crypto();
 
 describe('invokeScript', () => {
 

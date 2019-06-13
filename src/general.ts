@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { binary, json } from '@waves/marshall'
-import { verifySignature } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import {
   IAliasTransaction,
   IBurnTransaction,
@@ -36,6 +36,8 @@ import { setAssetScript } from './transactions/set-asset-script'
 import { exchange } from './transactions/exchange'
 import { sponsorship } from './transactions/sponsorship'
 import { invokeScript } from './transactions/invoke-script'
+
+const { verifySignature } = crypto()
 
 export interface WithTxType {
   type: TRANSACTION_TYPE

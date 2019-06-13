@@ -1,7 +1,9 @@
-import { publicKey, verifySignature } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { burn } from '../../src'
 import { burnMinimalParams } from '../minimalParams'
 import { binary } from '@waves/marshall'
+
+const { publicKey, verifySignature } = crypto();
 
 describe('burn', () => {
 

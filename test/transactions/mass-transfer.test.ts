@@ -1,7 +1,9 @@
-import { publicKey, verifySignature } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { massTransfer } from '../../src'
 import { massTransferMinimalParams } from '../minimalParams'
 import { binary } from '@waves/marshall'
+
+const { publicKey, verifySignature } = crypto();
 
 describe('massTransfer', () => {
 

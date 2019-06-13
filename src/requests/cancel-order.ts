@@ -1,8 +1,11 @@
-import { concat, signBytes } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { serializePrimitives } from '@waves/marshall'
 const {BASE58_STRING} = serializePrimitives
 import { getSenderPublicKey, convertToPairs } from '../generic'
 import { ICancelOrderParams, ICancelOrder } from '../transactions'
+
+const { signBytes } = crypto()
+const { concat } = crypto({output: 'Bytes'})
 
 export const cancelOrderParamsToBytes = (cancelOrderParams:{sender: string, orderId: string}) => concat(
   BASE58_STRING(cancelOrderParams.sender),
@@ -18,8 +21,7 @@ export function cancelOrder(params: ICancelOrderParams, seed: string): ICancelOr
     sender: senderPublicKey,
     orderId: params.orderId,
     signature: signBytes(
-      concat(BASE58_STRING(senderPublicKey), BASE58_STRING(params.orderId)),
-      seed
+      seed, concat(BASE58_STRING(senderPublicKey), BASE58_STRING(params.orderId))
     ),
   }
 

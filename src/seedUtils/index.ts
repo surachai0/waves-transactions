@@ -1,15 +1,26 @@
 import {
+  crypto,
+  aesEncrypt,
+  aesDecrypt,
+  randomBytes,
+  base64Decode,
+  base16Encode,
+  stringToBytes,
+  bytesToString,
+  base64Encode
+} from '@waves/waves-crypto'
+import dictionary from './dictionary'
+import { serializePrimitives, parsePrimitives, binary } from '@waves/marshall'
+
+const {
+    sha256,
+} = crypto({ output: 'Bytes' });
+
+const {
   address,
   privateKey,
   publicKey,
-  randomUint8Array,
-  libs,
-  byteArrayToHexString,
-  hexStringToByteArray,
-  sha256
-} from '@waves/waves-crypto'
-import dictionary from './dictionary'
-import { serializePrimitives, parsePrimitives } from '@waves/marshall'
+} = crypto({ output: 'Base58' });
 
 export class Seed {
 
@@ -105,7 +116,7 @@ export class Seed {
 
 export function generateNewSeed(length = 15) {
   const random = Array.from({ length })
-    .map(_ => randomUint8Array(4)
+    .map(_ => randomBytes(4)
       .reduce((acc, next, i) => acc + next * 2 ** (i * 4), 0)
     )
 
@@ -123,8 +134,8 @@ export function generateNewSeed(length = 15) {
 
 export function strengthenPassword(password: string, rounds: number = 5000): string {
   while (rounds--) {
-    const bytes = serializePrimitives.STRING(password)
-    password = byteArrayToHexString(sha256(bytes))
+    const bytes = stringToBytes(password)
+    password = base16Encode(sha256(bytes))
   }
   return password
 }
@@ -140,8 +151,7 @@ export function encryptSeed(seed: string, password: string, encryptionRounds?: n
   }
 
   password = strengthenPassword(password, encryptionRounds)
-  return libs.CryptoJS.AES.encrypt(seed, password).toString()
-
+  return base64Encode(aesEncrypt(seed, password))
 }
 
 
@@ -155,9 +165,8 @@ export function decryptSeed(encryptedSeed: string, password: string, encryptionR
   }
 
   password = strengthenPassword(password, encryptionRounds)
-  const hexSeed = libs.CryptoJS.AES.decrypt(encryptedSeed, password)
-  const byteSeed = hexStringToByteArray(hexSeed.toString())
-  return parsePrimitives.P_STRING_FIXED(byteSeed.length)(Uint8Array.from(byteSeed)).value
+  const binaryMsg = aesDecrypt(base64Decode(encryptedSeed), password)
+  return bytesToString(binaryMsg)
 }
 
 

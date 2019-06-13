@@ -1,7 +1,9 @@
-import { publicKey, verifySignature } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { binary } from '@waves/marshall'
 import { order } from '../../src/index'
 import { orderMinimalParams } from '../minimalParams'
+
+const {  publicKey, verifySignature } = crypto()
 
 describe('order', () => {
 

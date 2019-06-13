@@ -1,7 +1,9 @@
-import { publicKey, verifySignature } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { cancelOrder } from '../../src/index'
 import { cancelOrderParamsToBytes } from '../../src/requests/cancel-order'
 import { cancelOrderMinimalParams } from '../minimalParams'
+
+const {  publicKey, verifySignature } = crypto()
 
 describe('cancel-order', () => {
 

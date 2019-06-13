@@ -1,9 +1,10 @@
 import { TRANSACTION_TYPE, IAliasParams, IAliasTransaction, WithId, WithSender } from '../transactions'
 import { binary } from '@waves/marshall'
-import { hashBytes, signBytes } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { addProof, convertToPairs, fee, getSenderPublicKey, networkByte } from '../generic'
 import { TSeedTypes } from '../types'
 
+const { signBytes, blake2b } = crypto()
 
 /* @echo DOCS */
 export function alias(params: IAliasParams, seed: TSeedTypes): IAliasTransaction & WithId
@@ -28,10 +29,10 @@ export function alias(paramsOrTx: any, seed?: TSeedTypes): IAliasTransaction & W
 
   const bytes = binary.serializeTx(tx)
 
-  seedsAndIndexes.forEach(([s, i]) => addProof(tx, signBytes(bytes, s), i))
+  seedsAndIndexes.forEach(([s, i]) => addProof(tx, signBytes(s, bytes), i))
 
   const idBytes = [bytes[0], ...bytes.slice(36, -16)]
-  tx.id = hashBytes(Uint8Array.from(idBytes))
+  tx.id = blake2b(Uint8Array.from(idBytes))
 
   return tx
 }

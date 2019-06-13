@@ -6,6 +6,12 @@ describe('seed', () => {
     expect(seedUtils.decryptSeed(encrypted, 'asd')).toEqual('asd asd asd asd asd asd asd asd asd asd asd asd1')
   })
 
+  it('should encrypt seed', () => {
+    const seed = 'asd asd asd asd asd asd asd asd asd asd asd asd1'
+    const encrypted = seedUtils.encryptSeed(seed, 'asd')
+    expect(seedUtils.decryptSeed(encrypted, 'asd')).toEqual(seed)
+  })
+  
   it('should generate new seed', () => {
     const seed = seedUtils.generateNewSeed(15)
     expect(seed.split(' ').length).toEqual(15)

@@ -10,8 +10,11 @@ import {
   reissue, setAssetScript, transfer,
   waitForTx
 } from '../../src'
-import { address, publicKey, randomUint8Array } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { MASTER_SEED, CHAIN_ID, TIMEOUT, API_BASE } from './config'
+
+const { publicKey, address } = crypto();
+const { randomBytes } = crypto({ output: 'Bytes' });
 
 const recipientSeed = 'MyRecipient'
 
@@ -156,7 +159,7 @@ describe('Assets', () => {
 
   describe('Other', () => {
     it('Should create alias for address', async () => {
-      const aliasStr: string = [...randomUint8Array(10)].map(n => n.toString(16)).join('')
+      const aliasStr: string = [...randomBytes(10)].map(n => n.toString(16)).join('')
       const aliasTx = alias({ alias: aliasStr, chainId: 'T' }, MASTER_SEED)
       const resp = await broadcast(aliasTx, API_BASE)
       expect(resp.type).toEqual(10)

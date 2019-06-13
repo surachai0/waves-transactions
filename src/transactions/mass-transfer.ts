@@ -1,9 +1,10 @@
 import { TRANSACTION_TYPE, IMassTransferTransaction, IMassTransferParams, WithId, WithSender } from '../transactions'
 import { addProof, convertToPairs, fee, getSenderPublicKey } from '../generic'
 import { TSeedTypes } from '../types'
-import { hashBytes, signBytes } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { binary } from '@waves/marshall'
 
+const { signBytes, blake2b } = crypto()
 
 /* @echo DOCS */
 export function massTransfer(params: IMassTransferParams, seed: TSeedTypes): IMassTransferTransaction & WithId
@@ -31,8 +32,8 @@ export function massTransfer(paramsOrTx: any, seed?: TSeedTypes): IMassTransferT
 
   const bytes = binary.serializeTx(tx)
 
-  seedsAndIndexes.forEach(([s, i]) => addProof(tx, signBytes(bytes, s), i))
-  tx.id = hashBytes(bytes)
+  seedsAndIndexes.forEach(([s, i]) => addProof(tx, signBytes(s, bytes), i))
+  tx.id = blake2b(bytes)
 
   return tx
 }

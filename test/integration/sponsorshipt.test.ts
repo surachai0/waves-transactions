@@ -1,6 +1,8 @@
 import { broadcast, sponsorship, transfer, waitForTx } from '../../src'
 import { API_BASE, MASTER_SEED, TIMEOUT } from './config'
-import { address } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
+
+const { address } = crypto()
 
 describe('Sponsorship', () => {
   let assetId = 'ELjR9srYT4UDaBRSqo9D544YGQ8AwYkn7fjrmxWEo9en'

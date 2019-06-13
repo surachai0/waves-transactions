@@ -1,7 +1,9 @@
 import { broadcast, ISetScriptParams, setScript, waitForTx } from '../../src'
-import { address, publicKey } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
 import { MASTER_SEED, CHAIN_ID, TIMEOUT, API_BASE } from './config'
 import { data, invokeScript, transfer } from '../../src'
+
+const { address, publicKey } = crypto()
 
 describe('Smart features', () => {
 

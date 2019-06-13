@@ -4,7 +4,9 @@ import {
   WithSender, TOrder
 } from './transactions'
 import { TSeedTypes } from './types'
-import { publicKey } from '@waves/waves-crypto'
+import { crypto } from '@waves/waves-crypto'
+
+const { publicKey } = crypto()
 
 export const mapObj = <T, U, K extends string>(obj: Record<K, T>, f: (v: T) => U): Record<K, U> =>
   Object.entries<T>(obj).map(([k, v]) => [k, f(v)] as [string, U])
