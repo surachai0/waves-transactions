@@ -2,7 +2,9 @@
  * @module index
  */
 import { IIssueTransaction, TRANSACTION_TYPE, IIssueParams, WithId, WithSender } from '../transactions'
-import { signBytes, blake2b, base58Encode } from '@waves/ts-lib-crypto'
+import { base58Encode } from '@waves/ts-lib-crypto/conversions/base-xx'
+import { signBytes } from '@waves/ts-lib-crypto/crypto/sign'
+import { blake2b } from '@waves/ts-lib-crypto/crypto/hashing'
 import { addProof, getSenderPublicKey, base64Prefix, convertToPairs, fee, networkByte } from '../generic'
 import { TSeedTypes } from '../types'
 import { binary } from '@waves/marshall'
@@ -35,10 +37,10 @@ export function issue(paramsOrTx: any, seed?: TSeedTypes): IIssueTransaction & W
   }
 
   validate.issue(tx)
-  
+
   const bytes = binary.serializeTx(tx)
 
-  seedsAndIndexes.forEach(([s, i]) => addProof(tx, signBytes(s, bytes), i))
+  seedsAndIndexes.forEach(([s, i]) => addProof(tx, base58Encode(signBytes(s, bytes)), i))
   tx.id = base58Encode(blake2b(bytes))
 
   return tx

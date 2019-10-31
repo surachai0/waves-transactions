@@ -2,7 +2,9 @@
  * @module index
  */
 import { TRANSACTION_TYPE, ITransferTransaction, ITransferParams, WithId, WithSender } from '../transactions'
-import { signBytes, blake2b, base58Encode } from '@waves/ts-lib-crypto'
+import { base58Encode } from '@waves/ts-lib-crypto/conversions/base-xx'
+import { signBytes } from '@waves/ts-lib-crypto/crypto/sign'
+import { blake2b } from '@waves/ts-lib-crypto/crypto/hashing'
 import { addProof, getSenderPublicKey, convertToPairs, fee, normalizeAssetId } from '../generic'
 import { validate } from '../validators'
 import { TSeedTypes } from '../types'
@@ -31,12 +33,12 @@ export function transfer(paramsOrTx: any, seed?: TSeedTypes): ITransferTransacti
     proofs: paramsOrTx.proofs || [],
     id: '',
   }
-  
+
   validate.transfer(tx)
-  
+
   const bytes = binary.serializeTx(tx)
 
-  seedsAndIndexes.forEach(([s, i]) => addProof(tx, signBytes(s, bytes), i))
+  seedsAndIndexes.forEach(([s, i]) => addProof(tx, base58Encode(signBytes(s, bytes)), i))
   tx.id = base58Encode(blake2b(bytes))
 
   return tx
