@@ -13,7 +13,7 @@ const {
   SHORT,
   STRING,
 } = serializePrimitives
-import { concat, blake2b, signBytes, base58Encode } from '@waves/ts-lib-crypto'
+import { concat, blake2b, signBytes, base58Encode, base64Encode } from '@waves/ts-lib-crypto'
 import {
   IDataTransaction,
   TRANSACTION_TYPE,
@@ -79,14 +79,14 @@ export function data(paramsOrTx: any, seed?: TSeedTypes): IDataTransaction & Wit
         return {
           type,
           key: x.key,
-          value: type === 'binary' ? 'base64:' + Buffer.from(x.value as any[]).toString('base64') : x.value as (string | number | boolean),
+          value: type === 'binary' ? 'base64:' + base64Encode(x.value as any[]) : x.value as (string | number | boolean),
         }
       }
     }),
   }
-  
+
   validate.data(tx)
-  
+
   const bytes1 = binary.serializeTx(tx)
 
   seedsAndIndexes.forEach(([s,i]) => addProof(tx, signBytes(s, bytes1),i))

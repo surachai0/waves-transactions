@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = {
     mode: 'production',
     entry: './src/index.ts',
@@ -9,7 +10,9 @@ module.exports = {
         library: 'WavesTransactions',
         libraryTarget: 'umd'
     },
-    plugins: [],
+    plugins: [
+        new BundleAnalyzerPlugin()
+    ],
     resolve: {
         extensions: ['.ts', '.js', '.json'],
     },

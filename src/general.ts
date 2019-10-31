@@ -40,8 +40,8 @@ import { exchange } from './transactions/exchange'
 import { sponsorship } from './transactions/sponsorship'
 import { invokeScript } from './transactions/invoke-script'
 import { serializeCustomData, TSignedData } from './requests/custom-data'
-import { serializeAuthData } from './requests/auth';
-import { serializeWavesAuthData } from './requests/wavesAuth';
+import { serializeAuthData } from './requests/auth'
+import { serializeWavesAuthData } from './requests/wavesAuth'
 
 
 export const txTypeMap: { [type: number]: { sign: (tx: TTx | TTxParams & WithTxType, seed: TSeedTypes) => TTx } } = {
@@ -99,14 +99,14 @@ export function verifyCustomData(data: TSignedData): boolean {
   return verifySignature(data.publicKey as string, bytes, data.signature as string)
 }
 
-export function verifyAuthData(authData: { signature: string, publicKey: string, address: string }, params: IAuthParams, chainId?: string|number): boolean {
+export function verifyAuthData(authData: { signature: string, publicKey: string, address: string }, params: IAuthParams, chainId?: string | number): boolean {
   chainId = chainId || 'W'
   const bytes = serializeAuthData(params)
   const myAddress = address({ publicKey: authData.publicKey }, chainId)
   return myAddress === authData.address && verifySignature(authData.publicKey, bytes, authData.signature)
 }
 
-export function verifyWavesAuthData(authData: { signature: string, publicKey: string, address: string, timestamp: number }, params: {publicKey: string, timestamp: number}, chainId?: string|number): boolean {
+export function verifyWavesAuthData(authData: { signature: string, publicKey: string, address: string, timestamp: number }, params: { publicKey: string, timestamp: number }, chainId?: string | number): boolean {
   chainId = chainId || 'W'
   const bytes = serializeWavesAuthData(params)
   const myAddress = address({ publicKey: authData.publicKey }, chainId)
@@ -118,7 +118,7 @@ export function verifyWavesAuthData(authData: { signature: string, publicKey: st
  * @param ord - transaction to send
  * @param options - matcher address to send order to. E.g. https://matcher.wavesplatform.com/. Optional 'market' flag to send market order
  */
-export function submitOrder(ord: TOrder, options: {matcherUrl: string, market?: boolean}): Promise<any>
+export function submitOrder(ord: TOrder, options: { matcherUrl: string, market?: boolean }): Promise<any>
 /**
  * Sends order to matcher
  * @param ord - transaction to send
@@ -127,10 +127,10 @@ export function submitOrder(ord: TOrder, options: {matcherUrl: string, market?: 
 export function submitOrder(ord: TOrder, matcherUrl: string): Promise<any>
 export function submitOrder(ord: TOrder, opts: any) {
   let endpoint, matcherUrl: string
-  if ( typeof opts === 'string' ){
+  if (typeof opts === 'string') {
     matcherUrl = opts
     endpoint = 'matcher/orderbook'
-  }else {
+  } else {
     matcherUrl = opts.matcherUrl
     endpoint = opts.market ? 'matcher/orderbook/market' : 'matcher/orderbook'
   }
